@@ -1,0 +1,22 @@
+{
+  "name": "sigma-jobs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "ts": "npx tsc",
+    "dev": "nodemon dist/index.js"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/mongoose": "^5.11.97",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.4",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
+    "nodemon": "^3.1.7"
+  }
+}
