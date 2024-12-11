@@ -182,6 +182,6 @@ export const getToDoListForUserById = async (id: string) => {
         }
     } catch (error) {
         console.log({ error })
-        throw new Error("Error in task deletion")
+        throw new Error("Error in task fetching")
     }
 }
