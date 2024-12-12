@@ -175,7 +175,7 @@ export const getToDoListForUserById = async (id: string) => {
         const findTask = await todoListModel.findOne(new mongoose.Types.ObjectId(id));
 
         if (!findTask) {
-            throw new Error("Delete task failed")
+            throw new Error("Task not found")
         }
         return {
             message: "Success",
