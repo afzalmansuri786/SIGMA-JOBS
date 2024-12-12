@@ -151,7 +151,7 @@ export const updateToDoListForUser = async (userInput: { id: string, title?: str
 
 export const deleteToDoListForUser = async (id: string, userId: string) => {
     try {
-        const findTask = await todoListModel.findOne({ _id: new mongoose.Types.ObjectId(id), user: userId }).lean();
+        const findTask = await todoListModel.findOne({ _id: new mongoose.Types.ObjectId(id), user: new mongoose.Types.ObjectId(userId) }).lean();
 
         if (!findTask) {
             throw new Error("You are not owner of this todo list")

@@ -142,7 +142,7 @@ const updateToDoListForUser = (userInput) => __awaiter(void 0, void 0, void 0, f
 exports.updateToDoListForUser = updateToDoListForUser;
 const deleteToDoListForUser = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const findTask = yield to_list_model_1.todoListModel.findOne({ _id: new mongoose_1.default.Types.ObjectId(id), user: userId }).lean();
+        const findTask = yield to_list_model_1.todoListModel.findOne({ _id: new mongoose_1.default.Types.ObjectId(id), user: new mongoose_1.default.Types.ObjectId(userId) }).lean();
         if (!findTask) {
             throw new Error("You are not owner of this todo list");
         }
