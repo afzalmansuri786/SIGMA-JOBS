@@ -128,7 +128,7 @@ export const updateToDoListForUser = async (userInput: { id: string, title?: str
         const userId = userInput?.userId || '';
         delete userInput.userId;
 
-        const findTask = await todoListModel.findById(new mongoose.Schema.ObjectId(userInput?.id)).lean();
+        const findTask = await todoListModel.findById(new mongoose.Types.ObjectId(userInput.id)).lean();
         console.log({ findTask })
 
         if (findTask?.user.toString() !== userId) {
@@ -151,12 +151,12 @@ export const updateToDoListForUser = async (userInput: { id: string, title?: str
 
 export const deleteToDoListForUser = async (id: string, userId: string) => {
     try {
-        const findTask = await todoListModel.findOne({ _id: id, user: userId }).lean();
+        const findTask = await todoListModel.findOne({ _id: new mongoose.Types.ObjectId(id), user: new mongoose.Types.ObjectId(userId) }).lean();
 
         if (!findTask) {
             throw new Error("You are not owner of this todo list")
         }
-        const deleteToDoList = await todoListModel.findOneAndDelete({ _id: id });
+        const deleteToDoList = await todoListModel.findOneAndDelete({ _id: new mongoose.Types.ObjectId(id) });
 
         if (!deleteToDoList) {
             throw new Error("Delete task failed")
@@ -172,13 +172,14 @@ export const deleteToDoListForUser = async (id: string, userId: string) => {
 
 export const getToDoListForUserById = async (id: string) => {
     try {
-        const deleteToDoList = await todoListModel.findByIdAndDelete(id);
+        const findTask = await todoListModel.findOne(new mongoose.Types.ObjectId(id));
 
-        if (!deleteToDoList) {
+        if (!findTask) {
             throw new Error("Delete task failed")
         }
         return {
-            message: "ToDoList deleted successfully"
+            message: "Success",
+            findTask
         }
     } catch (error) {
         console.log({ error })
