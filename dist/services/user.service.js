@@ -33,7 +33,7 @@ const userRegister = (userInput) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         console.log({ error });
-        throw new Error("Unable to register user.");
+        throw new Error("Unable to register user");
     }
 });
 exports.userRegister = userRegister;
@@ -121,12 +121,13 @@ const updateToDoListForUser = (userInput) => __awaiter(void 0, void 0, void 0, f
     try {
         const userId = (userInput === null || userInput === void 0 ? void 0 : userInput.userId) || '';
         delete userInput.userId;
-        const findTask = yield to_list_model_1.todoListModel.findById(new mongoose_1.default.Types.ObjectId(userInput.id)).lean();
+        console.log({ userId: new mongoose_1.default.Schema.ObjectId(userId), id: new mongoose_1.default.Schema.ObjectId(userInput === null || userInput === void 0 ? void 0 : userInput.id) });
+        const findTask = yield to_list_model_1.todoListModel.findById(new mongoose_1.default.Schema.ObjectId(userInput === null || userInput === void 0 ? void 0 : userInput.id)).lean();
         console.log({ findTask });
         if ((findTask === null || findTask === void 0 ? void 0 : findTask.user.toString()) !== userId) {
             throw new Error("You are not owner of this todo list");
         }
-        const updateToDoList = yield to_list_model_1.todoListModel.findByIdAndUpdate(new mongoose_1.default.Types.ObjectId(userInput === null || userInput === void 0 ? void 0 : userInput.id), userInput);
+        const updateToDoList = yield to_list_model_1.todoListModel.findByIdAndUpdate(userInput === null || userInput === void 0 ? void 0 : userInput.id, userInput);
         if (!updateToDoList) {
             throw new Error("Update task failed");
         }
@@ -142,11 +143,11 @@ const updateToDoListForUser = (userInput) => __awaiter(void 0, void 0, void 0, f
 exports.updateToDoListForUser = updateToDoListForUser;
 const deleteToDoListForUser = (id, userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const findTask = yield to_list_model_1.todoListModel.findOne({ _id: new mongoose_1.default.Types.ObjectId(id), user: new mongoose_1.default.Types.ObjectId(userId) }).lean();
+        const findTask = yield to_list_model_1.todoListModel.findOne({ _id: id, user: userId }).lean();
         if (!findTask) {
             throw new Error("You are not owner of this todo list");
         }
-        const deleteToDoList = yield to_list_model_1.todoListModel.findOneAndDelete({ _id: new mongoose_1.default.Types.ObjectId(id) });
+        const deleteToDoList = yield to_list_model_1.todoListModel.findOneAndDelete({ _id: id });
         if (!deleteToDoList) {
             throw new Error("Delete task failed");
         }
@@ -162,18 +163,17 @@ const deleteToDoListForUser = (id, userId) => __awaiter(void 0, void 0, void 0, 
 exports.deleteToDoListForUser = deleteToDoListForUser;
 const getToDoListForUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const findTask = yield to_list_model_1.todoListModel.findOne({ _id: new mongoose_1.default.Types.ObjectId(id) });
-        if (!findTask) {
-            throw new Error("Task fetch failed");
+        const deleteToDoList = yield to_list_model_1.todoListModel.findByIdAndDelete(id);
+        if (!deleteToDoList) {
+            throw new Error("Delete task failed");
         }
         return {
-            message: "success",
-            toDoList: findTask
+            message: "ToDoList deleted successfully"
         };
     }
     catch (error) {
         console.log({ error });
-        throw new Error("Error in task fetching");
+        throw new Error("Error in task deletion");
     }
 });
 exports.getToDoListForUserById = getToDoListForUserById;
