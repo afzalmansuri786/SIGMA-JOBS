@@ -128,7 +128,7 @@ export const updateToDoListForUser = async (userInput: { id: string, title?: str
         const userId = userInput?.userId || '';
         delete userInput.userId;
 
-        const findTask = await todoListModel.findById(new mongoose.Types.ObjectId(userInput?.id)).lean();
+        const findTask = await todoListModel.findById(new mongoose.Types.ObjectId(userInput.id)).lean();
         console.log({ findTask })
 
         if (findTask?.user.toString() !== userId) {
@@ -172,14 +172,14 @@ export const deleteToDoListForUser = async (id: string, userId: string) => {
 
 export const getToDoListForUserById = async (id: string) => {
     try {
-        const findTask = await todoListModel.findOne({ _id: new mongoose.Types.ObjectId(id) });
+        const findTask = await todoListModel.findOne(new mongoose.Types.ObjectId(id));
 
         if (!findTask) {
-            throw new Error("Task fetch failed")
+            throw new Error("Task not found")
         }
         return {
-            message: "success",
-            toDoList: findTask
+            message: "Success",
+            findTask
         }
     } catch (error) {
         console.log({ error })
