@@ -22,7 +22,7 @@ export const userRegister = async (userInput: { email: string, password: string,
         return { message: `${userRole} registered successfully` }
     } catch (error) {
         console.log({ error })
-        throw new Error("Unable to register user.")
+        throw new Error("Unable to register user")
     }
 
 }
@@ -128,14 +128,14 @@ export const updateToDoListForUser = async (userInput: { id: string, title?: str
         const userId = userInput?.userId || '';
         delete userInput.userId;
 
-        const findTask = await todoListModel.findById(new mongoose.Types.ObjectId(userInput.id)).lean();
+        const findTask = await todoListModel.findById(new mongoose.Schema.ObjectId(userInput?.id)).lean();
         console.log({ findTask })
 
         if (findTask?.user.toString() !== userId) {
             throw new Error("You are not owner of this todo list")
         }
 
-        const updateToDoList = await todoListModel.findByIdAndUpdate(new mongoose.Types.ObjectId(userInput?.id), userInput)
+        const updateToDoList = await todoListModel.findByIdAndUpdate(userInput?.id, userInput)
 
         if (!updateToDoList) {
             throw new Error("Update task failed")
@@ -151,12 +151,12 @@ export const updateToDoListForUser = async (userInput: { id: string, title?: str
 
 export const deleteToDoListForUser = async (id: string, userId: string) => {
     try {
-        const findTask = await todoListModel.findOne({ _id: new mongoose.Types.ObjectId(id), user: new mongoose.Types.ObjectId(userId) }).lean();
+        const findTask = await todoListModel.findOne({ _id: id, user: userId }).lean();
 
         if (!findTask) {
             throw new Error("You are not owner of this todo list")
         }
-        const deleteToDoList = await todoListModel.findOneAndDelete({ _id: new mongoose.Types.ObjectId(id) });
+        const deleteToDoList = await todoListModel.findOneAndDelete({ _id: id });
 
         if (!deleteToDoList) {
             throw new Error("Delete task failed")
@@ -172,14 +172,13 @@ export const deleteToDoListForUser = async (id: string, userId: string) => {
 
 export const getToDoListForUserById = async (id: string) => {
     try {
-        const findTask = await todoListModel.findOne(new mongoose.Types.ObjectId(id));
+        const deleteToDoList = await todoListModel.findByIdAndDelete(id);
 
-        if (!findTask) {
-            throw new Error("Task not found")
+        if (!deleteToDoList) {
+            throw new Error("Delete task failed")
         }
         return {
-            message: "Success",
-            findTask
+            message: "ToDoList deleted successfully"
         }
     } catch (error) {
         console.log({ error })
